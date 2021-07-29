@@ -1,13 +1,15 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { State } from './../../store/state/app.state';
 import { Store } from '@ngrx/store';
 import { movie } from './../../models/movie';
 import { data } from './../../models/data';
-import { Observable } from 'rxjs';
-import { Component, OnInit } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MoviesService } from './../../services/movies.service';
 import { PageEvent } from '@angular/material/paginator'
 
-import { getMovies } from './../../store/movie.selector';
+import * as moviesAction from './../../store/movie.action'
+import * as movieSelectors from './../../store/movie.selector';
 
 
 @Component({
@@ -15,15 +17,16 @@ import { getMovies } from './../../store/movie.selector';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
-
-  page: number = 1;
+export class HomeComponent implements OnInit, OnDestroy {
   length!: number;
-  pageSize!: number;
-  movies$!: Observable<data>;
+  pageSize: number = 20;
+  movies!: data;
+  loaded = false;
   pageSizeOptions: number[] = [10, 20, 30, 40, 50];
-
-
+  isError: boolean = false;
+  errorMessage$!: Observable<string>;
+  sub!:Subscription
+  movies$!: Observable<data>
   // Navigator Our put
   pageEvent!: PageEvent;
 
@@ -34,7 +37,20 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getMovies();
+
+    this.store.dispatch(moviesAction.loadMovies());
+    this.movies$ = this.store.select(movieSelectors.getMovies);
+    setTimeout(() => {
+      console.log(this.movies$);
+      this.sub = this.store.select(movieSelectors.getMovies).subscribe(movies => {
+        // console.log(movies)
+        this.loaded = true;
+        this.movies = movies;
+        this.length = movies.total_results
+      });
+    },2000)
+
+    this.errorMessage$ = this.store.select(movieSelectors.getMoviesError);
   }
 
 
@@ -45,37 +61,20 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  handlePageEvent(event: PageEvent) {
-    this.moviesService.getMovies(event.pageIndex)
-    .subscribe(
-      (resData) => {
-          this.movies$ = this.store.select(getMovies)
-        this.movies$.subscribe(data => {
-          if(data !== null) this.length = data.total_results;
-        })
-        this.pageSize = 20
-      },
-      error => {
-        console.log(error);
-      }
+  handlePageEvent(event: PageEvent): void {
+
+    this.store.dispatch(moviesAction.loadMoviesPaginated({pageIndex: event.pageIndex}));
+    this.errorMessage$ = this.store.select(movieSelectors.getMoviesError);
+
+    this.sub = this.store.select(movieSelectors.getMovies)
+      .subscribe(
+        (data) => this.movies = data
     )
   }
 
 
-  getMovies(): void{
-    this.moviesService.getMovies(1)
-    .subscribe(
-      (resData) => {
-          this.movies$ = this.store.select(getMovies)
-        this.movies$.subscribe(data => {
-          if(data !== null) this.length = data.total_results;
-        })
-        this.pageSize = 20
-      },
-      error => {
-        console.log(error);
-      }
-    )
+  ngOnDestroy(): void {
+    this.sub?.unsubscribe()
   }
 
 }

@@ -14,3 +14,13 @@ export const getCurrentlySelectedMovie = createSelector(
   (state) => state.currentSelectedMovie
 );
 
+export const getMoviesError = createSelector(
+  getFeatureMovies,
+  (state) => state.error
+);
+
+export const getDiscovers = createSelector(
+  getFeatureMovies,
+  (state) => state.discover
+)
+

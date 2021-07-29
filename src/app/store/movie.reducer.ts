@@ -2,13 +2,15 @@ import { data } from './../models/data';
 import { createReducer, on } from '@ngrx/store'
 import { movie } from '../models/movie';
 
-import { loadMovies, loadMoviesSuccess, currentSelected } from './movie.action';
+import { loadMovies, loadMoviesSuccess, currentSelected, loadDiscover, loadDiscoverSuccess, loadMoviesPaginated } from './movie.action';
 
 
 export interface MovieState {
   movies: data,
   discover: data,
-  currentSelectedMovie: movie
+  currentSelectedMovie: movie,
+  error: string,
+  pageIndex: number
 }
 
 const initialState: MovieState = {
@@ -39,7 +41,9 @@ const initialState: MovieState = {
     video: false,
     vote_average: 0,
     vote_count: 0
-  }
+  },
+  error: '',
+  pageIndex: 1
 }
 
 export const movieReducer = createReducer<MovieState>(
@@ -60,6 +64,23 @@ export const movieReducer = createReducer<MovieState>(
       ...state,
       currentSelectedMovie: action.currentSelectedMovie
     }
-  })
+  }),
+  on(loadDiscover, (state): MovieState => {
+    return {
+      ...state,
+    }
+  }),
+  on(loadDiscoverSuccess, (state, action): MovieState => {
+    return {
+      ...state,
+      discover: action.discover
+    }
+  }),
+  on(loadMoviesPaginated, (state, action): MovieState => {
+    return {
+      ...state,
+      pageIndex: action.pageIndex
+    }
+  }),
 )
 

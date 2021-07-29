@@ -24,6 +24,7 @@
     "@ngrx/store": "^12.3.0",
     "@ngrx/store-devtools": "^12.3.0",
     "ngx-pagination": "^5.1.1",
+    "ngx-shimmer-loading": "0.0.5",
     "rxjs": "~6.6.0",
     "tslib": "^2.2.0",
     "zone.js": "~0.11.4"

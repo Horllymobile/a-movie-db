@@ -1,3 +1,4 @@
+import { MovieEffects } from './store/movie.effects';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -10,6 +11,7 @@ import {MatIconModule} from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule } from '@angular/material/paginator'
+import { NgxShimmerLoadingModule } from 'ngx-shimmer-loading';
 
 import { HeaderComponent } from './components/header/header.component';
 import { SearchComponent } from './components/search/search.component';
@@ -52,8 +54,9 @@ import { environment } from '../environments/environment';
     NgxPaginationModule,
     MatPaginatorModule,
     StoreModule.forRoot({movies: movieReducer}),
-    EffectsModule.forRoot([]),
+    EffectsModule.forRoot([MovieEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+    NgxShimmerLoadingModule
   ],
   providers: [],
   bootstrap: [AppComponent]

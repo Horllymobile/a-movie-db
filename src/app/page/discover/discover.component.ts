@@ -1,21 +1,28 @@
+import { Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
 import { data } from './../../models/data';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { movie } from 'src/app/models/movie';
 import { MoviesService } from 'src/app/services/movies.service';
+import { State } from 'src/app/store/state/app.state';
+
+import * as moviesAction from './../../store/movie.action';
+import * as movieSelectors from './../../store/movie.selector'
 
 @Component({
   selector: 'app-discover',
   templateUrl: './discover.component.html',
   styleUrls: ['./discover.component.scss']
 })
-export class DiscoverComponent implements OnInit {
+export class DiscoverComponent implements OnInit, OnDestroy {
   page: number = 1;
   length!: number;
   pageSize!: number;
   movies!: data;
   pageSizeOptions: number[] = [10, 20, 30, 40, 50];
+  sub!: Subscription
 
 
   // Navigator Our put
@@ -23,11 +30,29 @@ export class DiscoverComponent implements OnInit {
 
 
   constructor(
-    private moviesService: MoviesService
+    private moviesService: MoviesService,
+    private store: Store<State>
   ) { }
 
   ngOnInit(): void {
-    this.getDiscovers();
+
+    this.store.dispatch(moviesAction.loadDiscover());
+
+    setTimeout(() => {
+      this.sub = this.store.select(movieSelectors.getDiscovers)
+      .subscribe(movies => {
+        console.log(movies)
+        this.movies = movies
+        this.pageSize =  movies.results.length
+        this.length = movies.total_results
+      })
+    }, 2000)
+
+  }
+
+
+  ngOnDestroy(): void {
+    this.sub?.unsubscribe()
   }
 
 
@@ -39,35 +64,16 @@ export class DiscoverComponent implements OnInit {
   }
 
   handlePageEvent(event: PageEvent) {
-    console.log(event.pageIndex);
-    this.moviesService.getDiscover(event.pageIndex)
-    .subscribe(
-      (resData: any) => {
-        this.movies = resData;
-      },
-      (error: HttpErrorResponse) => {
-        console.log(error);
-      }
-    )
+    this.store.dispatch(moviesAction.loadMoviesPaginated({pageIndex: event.pageIndex}))
+    this.sub = this.store.select(movieSelectors.getDiscovers)
+    .subscribe(movies => {
+      this.movies = movies
+      this.pageSize = movies.total_pages
+      this.length = movies.total_results
+    })
   }
 
   sort(){
     // console.log(this.movies.results.sort((a:movie, b:movie) => a.popularity + b.popularity));
   }
-
-
-  getDiscovers(): void{
-    // this.moviesService.getDiscover(1)
-    // .subscribe(
-    //   (resData: data) => {
-    //     this.movies = resData;
-    //     this.length = this.movies.total_results
-    //     this.pageSize = 20
-    //   },
-    //   (error: HttpErrorResponse) => {
-    //     console.log(error);
-    //   }
-    // )
-  }
-
 }
