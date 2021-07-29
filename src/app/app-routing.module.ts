@@ -1,3 +1,4 @@
+import { DiscoverComponent } from './page/discover/discover.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
@@ -5,7 +6,8 @@ import { HomeComponent } from './page/home/home.component'
 
 const routes: Routes = [
   {path: '', redirectTo: "home", pathMatch: "full"},
-  {path: 'home', component: HomeComponent}
+  {path: 'home', component: HomeComponent},
+  {path: 'discover', component: DiscoverComponent}
 ];
 
 @NgModule({

@@ -1,6 +1,6 @@
-<div class="container-fluid mt-3" *ngIf="movies$ | async as movies">
+<div class="container-fluid mt-3" *ngIf="movies">
   <div class="row">
-    <div class="col-lg-4 mt-lg-5"
+    <div class="col-lg-4 mt-lg-5 mt-3"
       *ngFor="let movie of movies.results | paginate: {
         itemsPerPage: 20,
         currentPage: page,
