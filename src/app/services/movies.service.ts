@@ -7,7 +7,8 @@ import { environment } from './../../environments/environment';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 
-import { loadMovies, loadMoviesSuccess, loadDiscover, loadDiscoverSuccess } from './../store/movie.action';
+import * as moviesAction from './../store/movie.action';
+import { movie } from '../models/movie';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,7 @@ export class MoviesService {
       return this.http.get<data>(`${this.url}/movie/popular?page=${page + 1}&&api_key=${environment.apiKey}`)
       .pipe(
         map((movies) => {
-          this.store.dispatch(loadMoviesSuccess({movies: movies}))
+          this.store.dispatch(moviesAction.loadMoviesSuccess({movies: movies}))
           return movies;
         }),
         catchError(e => e)
@@ -37,7 +38,7 @@ export class MoviesService {
     return this.http.get<data>(`${this.url}/movie/popular?page=${page}&&api_key=${environment.apiKey}`)
       .pipe(
         map((movies) => {
-          this.store.dispatch(loadMoviesSuccess({movies: movies}))
+          this.store.dispatch(moviesAction.loadMoviesSuccess({movies: movies}))
           return movies;
         }),
       );
@@ -49,7 +50,7 @@ export class MoviesService {
       return this.http.get<data>(`${this.url}/discover/movie?page=${page}&&api_key=${environment.apiKey}`)
       .pipe(
         map((movies) => {
-          this.store.dispatch(loadDiscoverSuccess({discover: movies}))
+          this.store.dispatch(moviesAction.loadDiscoverSuccess({discover: movies}))
           return movies;
         }),
         catchError(e => e)
@@ -58,10 +59,18 @@ export class MoviesService {
     return this.http.get<data>(`${this.url}/discover/movie?page=${page}&&api_key=${environment.apiKey}`)
     .pipe(
       map((movies) => {
-        this.store.dispatch(loadDiscoverSuccess({discover: movies}))
+        this.store.dispatch(moviesAction.loadDiscoverSuccess({discover: movies}))
         return movies;
       }),
       catchError(e => e)
     );
+  }
+
+  getMovie(movie_id: number): Observable<any> {
+    return this.http.get<movie>(`${this.url}/movie/${movie_id}?api_key=${environment.apiKey}`)
+    .pipe(
+      map((resMovie) => resMovie),
+      catchError(err => err)
+    )
   }
 }

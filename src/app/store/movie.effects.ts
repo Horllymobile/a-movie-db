@@ -28,6 +28,22 @@ export class MovieEffects {
     )
   })
 
+  loadMovie$ = createEffect(() => {
+    return this.action$.pipe(
+      ofType(movieActions.loadMovie),
+      concatMap((action) => this.movieService.getMovie(action.movie_id).pipe(
+        map((movie) =>  {
+          console.log(movie)
+          return movieActions.currentSelected({currentSelectedMovie: movie})
+        }),
+        catchError((err: HttpErrorResponse) => {
+          console.log(err);
+          return of(movieActions.loadMoviesError({error: err.message}));
+        })
+      ))
+    )
+  })
+
   loadMoviesPaginated$ = createEffect(() => {
     return this.action$.pipe(
       ofType(movieActions.loadMoviesPaginated),

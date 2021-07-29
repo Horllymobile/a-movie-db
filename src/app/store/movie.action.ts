@@ -5,15 +5,19 @@ import { createAction, props } from '@ngrx/store';
 
 
 
-export const loadMovies = createAction('[LOAD MOVIES] MOVIES')
+export const loadMovies = createAction('[LOAD MOVIES] MOVIES');
+
 
 export const loadMoviesSuccess = createAction('[LOAD MOVIES SUCCESS] MOVIES', props<{movies: data}>());
 
-export const loadDiscover = createAction('[LOAD MOVIES] MOVIES')
+export const loadMovie = createAction('[MOVIE] ONE MOVIE', props<{movie_id: number}>());
+
+export const currentSelected = createAction('[MOVIE] SELECTED MOVIE', props<{currentSelectedMovie: movie}>())
+
+export const loadDiscover = createAction('[LOAD MOVIES DISCOVER]  MOVIES')
 
 export const loadDiscoverSuccess = createAction('[LOAD MOVIES DISCOVER SUCCESS] MOVIES', props<{discover: data}>())
 
-export const currentSelected = createAction('[CURRENT MOVIE] MOVIES', props<{currentSelectedMovie: movie}>())
 
 export const loadMoviesError = createAction('[LOAD MOVIES ERROR] MOVIES', props<{error: string}>());
 

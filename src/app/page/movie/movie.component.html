@@ -1,1 +1,15 @@
-<p>movie works!</p>
+<div class="container mt-5" *ngIf="movie$ | async as movie">
+  <div class="row">
+    <mat-card class="col-lg-6">
+      <mat-card-content>
+        <img  src="{{ tmdbImageUrl + movie.poster_path }}" width="100%" alt="">
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="col-lg-6">
+      <mat-card-title class="d-flex justify-content-between mt-2">
+        <h1>{{ movie.title }}</h1>
+        <p class="badge bg-dark">{{movie.popularity}}</p>
+      </mat-card-title>
+    </mat-card>
+  </div>
+</div>
