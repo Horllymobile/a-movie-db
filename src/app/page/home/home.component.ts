@@ -92,9 +92,20 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   sort(option: string): Observable<movie[]>{
+    // console.log(option)
     return this.movies$.pipe(
       map(res => {
-        return sortBy(res.results, [option]);
+        if(option === 'popularity'){
+          console.log('popularity')
+          return sortBy(<movie[]>res.results, [(o) => o.popularity + o.popularity]);
+        }else if(option === 'vote_count'){
+          console.log('vote_count')
+          return sortBy(<movie[]>res.results, [(o) => o.vote_count + o.vote_count]);
+        }else if(option === 'vote_average'){
+          console.log('vote_average')
+          return sortBy(<movie[]>res.results, [(o) => o.vote_average + o.vote_average]);
+        }
+        return <movie[]>res.results
       })
     )
   }
