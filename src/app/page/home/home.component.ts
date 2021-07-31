@@ -41,6 +41,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private moviesService: MoviesService,
     private store: Store<State>
   ) {
+
     this.filterOption$ = this.searchOption.valueChanges.pipe(
       startWith(''),
       debounceTime(400),
@@ -50,14 +51,14 @@ export class HomeComponent implements OnInit, OnDestroy {
       })
     )
 
-    this.filterOption$ = this.sortOption.valueChanges.pipe(
-      startWith(''),
-      debounceTime(400),
-      distinctUntilChanged(),
-      switchMap(val => {
-        return this.sort(val || '');
-      })
-    )
+    // this.filterOption$ = this.sortOption.valueChanges.pipe(
+    //   startWith(''),
+    //   debounceTime(400),
+    //   distinctUntilChanged(),
+    //   switchMap(val => {
+    //     return this.sort(val || '');
+    //   })
+    // )
    }
 
   ngOnInit(): void {
@@ -78,6 +79,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 
   filter(value: string): Observable<movie[]>{
+    console.log(value);
     return this.movies$.pipe(
       map(response => response.results.filter((option: movie) => {
         const filterd = option.title.toLowerCase().indexOf(value.toLowerCase()) === 0;
