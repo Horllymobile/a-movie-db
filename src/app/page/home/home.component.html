@@ -1,19 +1,28 @@
 <div class="container mt-5">
   <div class="row">
-    <div class="col-3 col-lg-1 offset-lg-1">
-      <app-sort></app-sort>
+    <div class="col-lg-3"></div>
+    <div class="col-lg-6 col-sm-12">
+      <div class="row">
+        <mat-form-field class="col-lg-3 col-sm-12">
+          <mat-label>Sort</mat-label>
+          <mat-select [formControl]="sortOption" (selectionChange)="sort(sortOption.value)">
+            <mat-option value="popularity">Popularity</mat-option>
+            <mat-option value="vote_count">Vote</mat-option>
+            <mat-option value="vote_average">Vote Average</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="col-lg-9 col-sm-12">
+          <input type="text" class="form-control" id="search" matInput [formControl]="searchOption" placeholder="Search"
+            [matAutocomplete]="auto">
+          <mat-autocomplete #auto='matAutocomplete'>
+            <mat-option *ngFor="let option of filterOption$ | async" [value]="option.title">
+              {{ option.title }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
     </div>
-    <div class="col-6 col-lg-6 col-sm-9 offset-lg-1 offset-sm-3">
-      <mat-form-field>
-        <input type="text" class="form-control me-2 col-sm-12" id="search" matInput [formControl]="search"
-          placeholder="Search" [matAutocomplete]="auto">
-        <mat-autocomplete #auto='matAutocomplete'>
-          <mat-option *ngFor="let option of filterOption$ | async" [value]="option.title">
-            {{ option.title }}
-          </mat-option>
-        </mat-autocomplete>
-      </mat-form-field>
-    </div>
+    <div class="col-lg-3"></div>
   </div>
 </div>
 

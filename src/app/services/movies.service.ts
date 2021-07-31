@@ -23,8 +23,9 @@ export class MoviesService {
   ) { }
 
   getMovies(page: number): Observable<any>{
-    if(page === 0) {
-      return this.http.get<data>(`${this.url}/movie/popular?page=${page + 1}&&api_key=${environment.apiKey}`)
+    console.log(page);
+    if(page === 1) {
+      return this.http.get<data>(`${this.url}/movie/popular?page=${page}&&api_key=${environment.apiKey}`)
       .pipe(
         map((movies) => {
           this.store.dispatch(moviesAction.loadMoviesSuccess({movies: movies}))
@@ -44,7 +45,7 @@ export class MoviesService {
   }
 
   getDiscover(page: number): Observable<any>{
-    if(page === 0) {
+    if(page === 1) {
       return this.http.get<data>(`${this.url}/discover/movie?page=${page}&&api_key=${environment.apiKey}`)
       .pipe(
         map((movies) => {

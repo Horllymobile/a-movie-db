@@ -48,7 +48,8 @@ export class MovieEffects {
     return this.action$.pipe(
       ofType(movieActions.loadMoviesPaginated),
       concatMap((action) => {
-        return this.movieService.getMovies(action.pageIndex)
+        console.log(action.pageIndex+1);
+        return this.movieService.getMovies(action.pageIndex+1)
         .pipe(
           map(movies => movieActions.loadMoviesPaginatedSuccess({movies})),
           catchError(error => of(movieActions.loadMoviesError({error})))
