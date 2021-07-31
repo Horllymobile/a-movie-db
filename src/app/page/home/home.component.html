@@ -4,7 +4,15 @@
       <app-sort></app-sort>
     </div>
     <div class="col-6 col-lg-6 col-sm-9 offset-lg-1 offset-sm-3">
-      <app-search></app-search>
+      <mat-form-field>
+        <input type="text" class="form-control me-2 col-sm-12" id="search" matInput [formControl]="search"
+          placeholder="Search" [matAutocomplete]="auto">
+        <mat-autocomplete #auto='matAutocomplete'>
+          <mat-option *ngFor="let option of filterOption$ | async" [value]="option.title">
+            {{ option.title }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
     </div>
   </div>
 </div>
@@ -12,18 +20,14 @@
 <div *ngIf="loaded">
   <div class="container-fluid mt-3" *ngIf="movies">
     <div class="row">
-      <div class="col-lg-4 mt-3"
-        *ngFor="let movie of movies.results">
+      <div class="col-lg-4 mt-3" *ngFor="let movie of movies">
         <app-card [movieIn]="movie"></app-card>
       </div>
     </div>
     <div class="text-right mt-4 mb-4">
 
-      <mat-paginator [length]="length"
-        [pageSize]="pageSize"
-        [pageSizeOptions]="pageSizeOptions"
-        (page)="handlePageEvent($event)"
-        aria-label="Select page">
+      <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+        (page)="handlePageEvent($event)" aria-label="Select page">
       </mat-paginator>
     </div>
   </div>
@@ -31,7 +35,7 @@
 
 
 <div class="container mt-5" *ngIf="!loaded">
-  <ngx-shimmer-loading   [width]="'100%'" [height]="'500px'"></ngx-shimmer-loading>
+  <ngx-shimmer-loading [width]="'100%'" [height]="'500px'"></ngx-shimmer-loading>
 </div>
 
 

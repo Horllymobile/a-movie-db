@@ -15,8 +15,7 @@ export class CardComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.tmdbImageUrl = this.tmdbImageUrl +  this.movieIn.poster_path
-    // console.log(this.tmdbImageUrl);
+    this.tmdbImageUrl = this.tmdbImageUrl +  this.movieIn.poster_path;
   }
 
 }

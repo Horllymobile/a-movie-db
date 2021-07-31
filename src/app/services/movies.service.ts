@@ -33,8 +33,6 @@ export class MoviesService {
         catchError(e => e)
       );
     }
-
-    console.log(page);
     return this.http.get<data>(`${this.url}/movie/popular?page=${page}&&api_key=${environment.apiKey}`)
       .pipe(
         map((movies) => {
